@@ -1,23 +1,16 @@
 import "./style.css";
 
-let counter: number = 0;
+let counter: number = Number(0);
 document.body.innerHTML = `
   <h2> Have some LOVE!<br></h2>
   `;
 
-function counterOverTime() {
-  console.log("function called");
-  if (autoClicker < 1) {
-    return;
-  }
-  counter += autoClicker;
-  updateText();
-}
+
 function updateText() {
-  counterText.innerText = `Spread the Joy: ${counter}\n`;
+  counterText.innerText = `Spread the Joy: ${counter.toFixed(2)}\n`;
 }
 
-const counterText = document.createElement("amount");
+const counterText = document.createElement("div");
 updateText();
 counterText.id = "counter";
 document.body.appendChild(counterText);
@@ -53,5 +46,19 @@ buyMe?.addEventListener("click", () => {
   }
 });
 
-//console.log("did this run");
-setInterval(counterOverTime, 1000);
+let lastTime = performance.now();
+const rate = 1;
+
+function updateCounter() {
+  const dt = (performance.now() - lastTime) / 1000;
+  lastTime = performance.now();
+
+  if (autoClicker >= 1) {
+    counter += autoClicker * rate * dt;
+    updateText();
+  }
+  requestAnimationFrame(updateCounter);
+}
+
+updateCounter();
+
