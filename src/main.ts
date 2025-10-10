@@ -1,58 +1,57 @@
-import exampleIconUrl from "./noun-paperclip-7598668-00449F.png";
 import "./style.css";
 
 let counter: number = 0;
 document.body.innerHTML = `
-  <p>Example image asset: <img src="${exampleIconUrl}" class="icon" /></p>
   <h2> Have some LOVE!<br></h2>
   `;
 
 function counterOverTime() {
   console.log("function called");
+  if (autoClicker < 1) {
+    return;
+  }
   counter += autoClicker;
-  counterText.innerText = `Spread the Joy: ${counter}`;
+  updateText();
+}
+function updateText() {
+  counterText.innerText = `Spread the Joy: ${counter}\n`;
 }
 
 const counterText = document.createElement("amount");
-counterText.innerText = `Spread the Joy: ${counter}`;
+updateText();
 counterText.id = "counter";
 document.body.appendChild(counterText);
 
 const button = document.createElement("button");
-button.textContent = "💜"; //place your emoji
-button.id = "clicker"; //for the next step, i think
-//<div id="clicker"></div>
+button.textContent = "💜";
+button.id = "clicker";
 document.body.appendChild(button);
 
 const buyMe = document.createElement("button");
-buyMe.textContent = "💸";
+buyMe.textContent = "💸 Cost 20";
 button.id = "bought";
 document.body.appendChild(buyMe);
 
 button?.addEventListener("click", () => {
   console.log("it clicked!");
   counter += 1;
-  counterText.innerText = `Spread the Joy: ${counter}`;
+  updateText();
 });
 
 let autoClicker: number = 0;
-let growingAmount: number = 20;
+const growingAmount: number = 20;
 
 buyMe?.addEventListener("click", () => {
   if (counter < growingAmount) {
     return;
   }
   if (counter >= growingAmount) {
-    console.log("its been bought");
     counter -= growingAmount;
     autoClicker += 1;
-    counterText.innerText = `Spread the Joy:${counter}`;
+    updateText();
     console.log(`this is autoclicker ${autoClicker}`);
   }
-  console.log("its been bought");
 });
 
-if (autoClicker != 0) {
-  console.log("did this run");
-  setInterval(counterOverTime, 1000);
-}
+//console.log("did this run");
+setInterval(counterOverTime, 1000);
