@@ -5,7 +5,6 @@ document.body.innerHTML = `
   <h2> Have some LOVE!<br></h2>
   `;
 
-
 function updateText() {
   counterText.innerText = `Spread the Joy: ${counter.toFixed(2)}\n`;
 }
@@ -34,10 +33,12 @@ button?.addEventListener("click", () => {
 let autoClicker: number = 0;
 const growingAmount: number = 20;
 
+buyMe.disabled = true;
+if (counter >= growingAmount) {
+  console.log("are you in there?");
+  buyMe.disabled = false;
+}
 buyMe?.addEventListener("click", () => {
-  if (counter < growingAmount) {
-    return;
-  }
   if (counter >= growingAmount) {
     counter -= growingAmount;
     autoClicker += 1;
@@ -61,4 +62,3 @@ function updateCounter() {
 }
 
 updateCounter();
-
