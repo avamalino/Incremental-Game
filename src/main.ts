@@ -34,10 +34,10 @@ let autoClicker: number = 0;
 const growingAmount: number = 20;
 
 buyMe.disabled = true;
-if (counter >= growingAmount) {
-  console.log("are you in there?");
-  buyMe.disabled = false;
-}
+//if (counter >= growingAmount) {
+//  console.log("are you in there?");
+//  buyMe.disabled = false;
+//}
 buyMe?.addEventListener("click", () => {
   if (counter >= growingAmount) {
     counter -= growingAmount;
@@ -53,6 +53,11 @@ const rate = 1;
 function updateCounter() {
   const dt = (performance.now() - lastTime) / 1000;
   lastTime = performance.now();
+  if (counter >= growingAmount) {
+    buyMe.disabled = false;
+  } else {
+    buyMe.disabled = true;
+  }
 
   if (autoClicker >= 1) {
     counter += autoClicker * rate * dt;
