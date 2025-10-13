@@ -3,11 +3,11 @@ import "./style.css";
 let counter: number = Number(0);
 let autoClicker: number = 0;
 
-const yHeartAmt: number = 10;
+let yHeartAmt: number = 10;
 let yhCounter: number = 0;
-const pHeartAmt: number = 100;
+let pHeartAmt: number = 100;
 let phCounter: number = 0;
-const bHeartAmt: number = 1000;
+let bHeartAmt: number = 1000;
 let bhCounter: number = 0;
 
 document.body.innerHTML = `
@@ -17,9 +17,9 @@ document.body.innerHTML = `
 function updateText() {
   counterText.innerText = `Spread the Joy: ${counter.toFixed(2)}\n
   Current hearts/second: ${autoClicker.toFixed(2)}`;
-  yellowHeart.textContent = `${yhCounter} 💛 Cost 10`;
-  pinkHeart.textContent = `${phCounter} ❤️ Cost 100`;
-  blueHeart.textContent = `${bhCounter} 🩵 cost 1000`;
+  yellowHeart.textContent = `${yhCounter} 💛 Cost ${yHeartAmt.toFixed(2)}`;
+  pinkHeart.textContent = `${phCounter} ❤️ Cost ${pHeartAmt.toFixed(2)}`;
+  blueHeart.textContent = `${bhCounter} 🩵 cost ${bHeartAmt.toFixed(2)}`;
 }
 
 const counterText = document.createElement("div");
@@ -59,9 +59,7 @@ blueHeart.disabled = true;
 
 purpleHeart?.addEventListener("click", () => {
   console.log("it clicked!");
-  counter += 1; //later add specific rates for each button and then add
-  //the cash button rate to the normal counter like cookie clicker with the cursors
-  updateText();
+  counter += 1;
 });
 
 yellowHeart?.addEventListener("click", () => {
@@ -69,6 +67,7 @@ yellowHeart?.addEventListener("click", () => {
     counter -= yHeartAmt;
     autoClicker += 0.1;
     yhCounter += 1;
+    yHeartAmt *= 1.15;
     updateText();
     console.log(`this is autoclicker ${autoClicker}`);
   }
@@ -79,6 +78,7 @@ pinkHeart?.addEventListener("click", () => {
     counter -= pHeartAmt;
     autoClicker += 2;
     phCounter += 1;
+    pHeartAmt *= 1.15;
     updateText();
   }
 });
@@ -88,6 +88,7 @@ blueHeart?.addEventListener("click", () => {
     counter -= bHeartAmt;
     autoClicker += 50;
     bhCounter += 1;
+    bHeartAmt *= 1.15;
     updateText();
   }
 });
