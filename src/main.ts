@@ -1,5 +1,5 @@
 import "./style.css";
-
+//narrative throughout whole thing is hearts <3
 let counter: number = Number(0);
 let autoClicker: number = 0;
 
