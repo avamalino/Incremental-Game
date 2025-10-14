@@ -3,94 +3,99 @@ import "./style.css";
 let counter: number = Number(0);
 let autoClicker: number = 0;
 
-let yHeartAmt: number = 10;
-let yhCounter: number = 0;
-let pHeartAmt: number = 100;
-let phCounter: number = 0;
-let bHeartAmt: number = 1000;
-let bhCounter: number = 0;
-
 document.body.innerHTML = `
   <h2> Have some LOVE!<br></h2>
   `;
 
+const gameContainer = document.createElement("div");
+gameContainer.className = "game-container";
+
+const mainArea = document.createElement("div");
+mainArea.className = "main-area";
+
+const sidePanel = document.createElement("div");
+sidePanel.className = "side-panel";
+
+
+gameContainer.appendChild(mainArea);
+gameContainer.appendChild(sidePanel);
+document.body.appendChild(gameContainer);
+
+const FIXED_RATE: number = 1.15;  
+
+
+interface Heart {
+  name: string;
+  emoji: string;
+  price: number;
+  rate: number;
+  counter: number;
+  id: string;
+}
+
+const availableHearts: Heart[] = [
+  { name: "yellowHeart", emoji: "💛", price: 10, rate: 0.1, counter: 0, id: "yheart" },
+  { name: "pinkHeart", emoji: "❤️", price: 100, rate: 2, counter: 0, id: "pheart" },
+  { name: "blueHeart", emoji: "🩵", price: 1000, rate: 50, counter: 0, id: "bheart" },
+];
+
 function updateText() {
   counterText.innerText = `Spread the Joy: ${counter.toFixed(2)}\n
   Current hearts/second: ${autoClicker.toFixed(2)}`;
-  yellowHeart.textContent = `${yhCounter} 💛 Cost ${yHeartAmt.toFixed(2)}`;
-  pinkHeart.textContent = `${phCounter} ❤️ Cost ${pHeartAmt.toFixed(2)}`;
-  blueHeart.textContent = `${bhCounter} 🩵 cost ${bHeartAmt.toFixed(2)}`;
+  availableHearts.forEach((heart) => {
+    const button = document.getElementById(heart.id) as HTMLButtonElement;
+    button.disabled = counter < heart.price ? true : false;
+    button.textContent = `${heart.counter} ${heart.emoji} Cost ${heart.price.toFixed(2)}`;
+  });
 }
 
+
+availableHearts.forEach((heart) => {
+  const button = document.createElement("button");
+  button.className = "resource-button";
+  button.id = heart.id;
+  button.textContent = `${heart.counter} ${heart.emoji} Cost ${heart.price.toFixed(2)}`;
+  button.addEventListener("click", () => {
+    if (counter >= heart.price) {
+      counter -= heart.price;
+      heart.counter += 1;
+      autoClicker += heart.rate
+      heart.price *= FIXED_RATE;
+      updateText();
+    }
+  });
+  
+  sidePanel.appendChild(button);
+});
+
+//button and text creation
 const counterText = document.createElement("div");
 //updateText();
 counterText.id = "counter";
-document.body.appendChild(counterText);
+counterText.style.textAlign = "center";
+counterText.style.marginTop = "10px";
+counterText.style.fontSize = "1.4em";
+counterText.style.fontWeight = "bold";
+mainArea.appendChild(counterText);
 
+
+//main clicker
 const purpleHeart = document.createElement("button");
 purpleHeart.textContent = "💜";
 purpleHeart.id = "clicker";
 purpleHeart.className = "pheart-button";
 document.body.appendChild(purpleHeart);
 
-const yellowHeart = document.createElement("button");
-yellowHeart.textContent = "💛 Cost 10";
-yellowHeart.id = "yheart";
-yellowHeart.className = "resource-button";
-document.body.appendChild(yellowHeart);
+mainArea.appendChild(purpleHeart);
 
-const pinkHeart = document.createElement("button");
-pinkHeart.textContent = "❤️ Cost 100";
-pinkHeart.id = "pheart";
-pinkHeart.className = "resource-button";
-document.body.appendChild(pinkHeart);
 
-const blueHeart = document.createElement("button");
-blueHeart.textContent = "🩵 cost 1000";
-blueHeart.id = "bheart";
-blueHeart.className = "resource-button";
-document.body.appendChild(blueHeart);
-
+//first text call, makes buttons disabled and updates their text
 updateText();
 
-yellowHeart.disabled = true;
-pinkHeart.disabled = true;
-blueHeart.disabled = true;
-
+//main purple heart clicker
 purpleHeart?.addEventListener("click", () => {
   console.log("it clicked!");
   counter += 1;
-});
-
-yellowHeart?.addEventListener("click", () => {
-  if (counter >= yHeartAmt) {
-    counter -= yHeartAmt;
-    autoClicker += 0.1;
-    yhCounter += 1;
-    yHeartAmt *= 1.15;
-    updateText();
-    console.log(`this is autoclicker ${autoClicker}`);
-  }
-});
-
-pinkHeart?.addEventListener("click", () => {
-  if (counter >= pHeartAmt) {
-    counter -= pHeartAmt;
-    autoClicker += 2;
-    phCounter += 1;
-    pHeartAmt *= 1.15;
-    updateText();
-  }
-});
-
-blueHeart?.addEventListener("click", () => {
-  if (counter >= bHeartAmt) {
-    counter -= bHeartAmt;
-    autoClicker += 50;
-    bhCounter += 1;
-    bHeartAmt *= 1.15;
-    updateText();
-  }
 });
 
 let lastTime = performance.now();
@@ -99,11 +104,6 @@ const rate = 1;
 function updateCounter() {
   const dt = (performance.now() - lastTime) / 1000;
   lastTime = performance.now();
-
-  yellowHeart.disabled = counter < yHeartAmt ? true : false;
-  pinkHeart.disabled = counter < pHeartAmt ? true : false;
-  blueHeart.disabled = counter < bHeartAmt ? true : false;
-
   if (autoClicker >= 0) {
     counter += autoClicker * rate * dt;
     updateText();
