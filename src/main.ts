@@ -16,13 +16,11 @@ mainArea.className = "main-area";
 const sidePanel = document.createElement("div");
 sidePanel.className = "side-panel";
 
-
 gameContainer.appendChild(mainArea);
 gameContainer.appendChild(sidePanel);
 document.body.appendChild(gameContainer);
 
-const FIXED_RATE: number = 1.15;  
-
+const FIXED_RATE: number = 1.15;
 
 interface Heart {
   name: string;
@@ -31,12 +29,55 @@ interface Heart {
   rate: number;
   counter: number;
   id: string;
+  description: string;
 }
 
 const availableHearts: Heart[] = [
-  { name: "yellowHeart", emoji: "💛", price: 10, rate: 0.1, counter: 0, id: "yheart" },
-  { name: "pinkHeart", emoji: "❤️", price: 100, rate: 2, counter: 0, id: "pheart" },
-  { name: "blueHeart", emoji: "🩵", price: 1000, rate: 50, counter: 0, id: "bheart" },
+  {
+    name: "yellowHeart",
+    emoji: "💛",
+    price: 10,
+    rate: 0.1,
+    counter: 0,
+    id: "yheart",
+    description: "Golden like the sun, sure to brighten your day!",
+  },
+  {
+    name: "pinkHeart",
+    emoji: "🩷",
+    price: 100,
+    rate: 2,
+    counter: 0,
+    id: "pheart",
+    description: "Sweet and Innocent, and lovely too!",
+  },
+  {
+    name: "blueHeart",
+    emoji: "🩵",
+    price: 1000,
+    rate: 50,
+    counter: 0,
+    id: "bheart",
+    description: "Cool like the ocean, and cool like you!",
+  },
+  {
+    name: "redHeart",
+    emoji: "❤️",
+    price: 15000,
+    rate: 130,
+    counter: 0,
+    id: "rHeart",
+    description: "Classic red. Theres passion in the air!",
+  },
+  {
+    name: "whiteHeart",
+    emoji: "🤍",
+    price: 50000,
+    rate: 300,
+    counter: 0,
+    id: "wHeart",
+    description: "Between friends, I still love you!",
+  },
 ];
 
 function updateText() {
@@ -45,26 +86,29 @@ function updateText() {
   availableHearts.forEach((heart) => {
     const button = document.getElementById(heart.id) as HTMLButtonElement;
     button.disabled = counter < heart.price ? true : false;
-    button.textContent = `${heart.counter} ${heart.emoji} Cost ${heart.price.toFixed(2)}`;
+    button.textContent = `${heart.counter} ${heart.emoji} Cost ${
+      heart.price.toFixed(2)
+    } ${heart.description}`;
   });
 }
-
 
 availableHearts.forEach((heart) => {
   const button = document.createElement("button");
   button.className = "resource-button";
   button.id = heart.id;
-  button.textContent = `${heart.counter} ${heart.emoji} Cost ${heart.price.toFixed(2)}`;
+  button.textContent = `${heart.counter} ${heart.emoji} Cost ${
+    heart.price.toFixed(2)
+  }  ${heart.description}`;
   button.addEventListener("click", () => {
     if (counter >= heart.price) {
       counter -= heart.price;
       heart.counter += 1;
-      autoClicker += heart.rate
+      autoClicker += heart.rate;
       heart.price *= FIXED_RATE;
       updateText();
     }
   });
-  
+
   sidePanel.appendChild(button);
 });
 
@@ -78,7 +122,6 @@ counterText.style.fontSize = "1.4em";
 counterText.style.fontWeight = "bold";
 mainArea.appendChild(counterText);
 
-
 //main clicker
 const purpleHeart = document.createElement("button");
 purpleHeart.textContent = "💜";
@@ -87,7 +130,6 @@ purpleHeart.className = "pheart-button";
 document.body.appendChild(purpleHeart);
 
 mainArea.appendChild(purpleHeart);
-
 
 //first text call, makes buttons disabled and updates their text
 updateText();
