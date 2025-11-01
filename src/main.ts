@@ -1,12 +1,15 @@
 import "./style.css";
 //narrative throughout whole thing is hearts <3
-let counter: number = Number(0);
-let autoClicker: number = 0;
+let heartCount: number = Number(0);
+let heartsPerSec: number = 0;
 
 document.body.innerHTML = `
   <h2> Have some LOVE!<br></h2>
+  <div id="description-panel">
+        <p class="text" id="description-text"><span id="description">Get Clicking!</span></p>
+      </div>
   `;
-
+//container creation
 const gameContainer = document.createElement("div");
 gameContainer.className = "game-container";
 
@@ -27,100 +30,87 @@ interface Heart {
   emoji: string;
   price: number;
   rate: number;
-  counter: number;
+  heartCount: number;
   id: string;
   description: string;
+  headerDescription: string;
 }
 
+//hearts and their attributes
 const availableHearts: Heart[] = [
   {
     name: "yellowHeart",
     emoji: "💛",
     price: 10,
     rate: 0.1,
-    counter: 0,
+    heartCount: 0,
     id: "yheart",
     description: "Golden like the sun, sure to brighten your day!",
+    headerDescription: "You added a yellow Heart!",
   },
   {
     name: "pinkHeart",
     emoji: "🩷",
     price: 100,
     rate: 2,
-    counter: 0,
+    heartCount: 0,
     id: "pheart",
     description: "Sweet and Innocent, and lovely too!",
+    headerDescription: "You added a pink Heart!",
   },
   {
     name: "blueHeart",
     emoji: "🩵",
     price: 1000,
     rate: 50,
-    counter: 0,
+    heartCount: 0,
     id: "bheart",
     description: "Cool like the ocean, and cool like you!",
+    headerDescription: "You added a blue Heart!",
   },
   {
     name: "redHeart",
     emoji: "❤️",
     price: 15000,
     rate: 130,
-    counter: 0,
+    heartCount: 0,
     id: "rHeart",
     description: "Classic red. Theres passion in the air!",
+    headerDescription: "You added a red Heart!",
   },
   {
     name: "whiteHeart",
     emoji: "🤍",
     price: 50000,
     rate: 300,
-    counter: 0,
+    heartCount: 0,
     id: "wHeart",
     description: "Between friends, I still love you!",
+    headerDescription: "You added a white Heart!",
   },
 ];
 
 function updateText() {
-  counterText.innerText = `Spread the Joy: ${counter.toFixed(2)}\n
-  Current hearts/second: ${autoClicker.toFixed(2)}`;
+  heartCountText.innerText = `Spread the Joy: ${heartCount.toFixed(2)}\n
+  Current hearts/second: ${heartsPerSec.toFixed(2)}`;
   availableHearts.forEach((heart) => {
     const button = document.getElementById(heart.id) as HTMLButtonElement;
-    button.disabled = counter < heart.price ? true : false;
-    button.textContent = `${heart.counter} ${heart.emoji} Cost ${
+    button.disabled = heartCount < heart.price ? true : false;
+    button.textContent = `${heart.heartCount} ${heart.emoji} Cost ${
       heart.price.toFixed(2)
     } ${heart.description}`;
   });
 }
 
-availableHearts.forEach((heart) => {
-  const button = document.createElement("button");
-  button.className = "resource-button";
-  button.id = heart.id;
-  button.textContent = `${heart.counter} ${heart.emoji} Cost ${
-    heart.price.toFixed(2)
-  }  ${heart.description}`;
-  button.addEventListener("click", () => {
-    if (counter >= heart.price) {
-      counter -= heart.price;
-      heart.counter += 1;
-      autoClicker += heart.rate;
-      heart.price *= FIXED_RATE;
-      updateText();
-    }
-  });
-
-  sidePanel.appendChild(button);
-});
-
 //button and text creation
-const counterText = document.createElement("div");
+const heartCountText = document.createElement("div");
 //updateText();
-counterText.id = "counter";
-counterText.style.textAlign = "center";
-counterText.style.marginTop = "10px";
-counterText.style.fontSize = "1.4em";
-counterText.style.fontWeight = "bold";
-mainArea.appendChild(counterText);
+heartCountText.id = "heartCount";
+heartCountText.style.textAlign = "center";
+heartCountText.style.marginTop = "10px";
+heartCountText.style.fontSize = "1.4em";
+heartCountText.style.fontWeight = "bold";
+mainArea.appendChild(heartCountText);
 
 //main clicker
 const purpleHeart = document.createElement("button");
@@ -131,26 +121,51 @@ document.body.appendChild(purpleHeart);
 
 mainArea.appendChild(purpleHeart);
 
+const descriptionElement = document.getElementById("description")!;
+//sub clicker buttons
+availableHearts.forEach((heart) => {
+  const button = document.createElement("button");
+  button.className = "resource-button";
+  button.id = heart.id;
+  button.textContent = `${heart.heartCount} ${heart.emoji} Cost ${
+    heart.price.toFixed(2)
+  }  ${heart.description}`;
+  button.addEventListener("click", () => {
+    if (heartCount >= heart.price) {
+      heartCount -= heart.price;
+      heart.heartCount += 1;
+      heartsPerSec += heart.rate;
+      heart.price *= FIXED_RATE;
+      updateText();
+    }
+    //added a header description element like Kaitlyn does here https://github.com/kaitlyn-png/cmpm-121-f25-d1/blob/main/src/main.ts
+    descriptionElement.textContent = heart.headerDescription;
+  });
+
+  sidePanel.appendChild(button);
+});
 //first text call, makes buttons disabled and updates their text
 updateText();
 
+//Game Loop//
 //main purple heart clicker
 purpleHeart?.addEventListener("click", () => {
   console.log("it clicked!");
-  counter += 1;
+  heartCount += 1;
 });
 
+//check to see how much time has passed and calculates how much the autoclicker should go up
 let lastTime = performance.now();
 const rate = 1;
 
-function updateCounter() {
+function updateheartCount() {
   const dt = (performance.now() - lastTime) / 1000;
   lastTime = performance.now();
-  if (autoClicker >= 0) {
-    counter += autoClicker * rate * dt;
+  if (heartsPerSec >= 0) {
+    heartCount += heartsPerSec * rate * dt;
     updateText();
   }
-  requestAnimationFrame(updateCounter);
+  requestAnimationFrame(updateheartCount);
 }
 
-updateCounter();
+updateheartCount();

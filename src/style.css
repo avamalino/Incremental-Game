@@ -52,6 +52,22 @@ header {
   transform: scale(1.1);
   filter: drop-shadow(0 0 10px #aa00ff);
 }
+/** Inspired by the click bounce from this repo I went ahead and implemented something
+similar when pressing my purple heart button https://github.com/mydoot/cmpm-121-d1/blob/main/src/style.css **/
+.pheart-button:active {
+  animation: bounce 0.3s ease;
+}
+@keyframes bounce {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: translateY(-10px) scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 .side-panel {
   flex: 1;
   display: flex;
@@ -63,6 +79,22 @@ header {
   background-color: #f0e6ff;
   border-radius: 15px;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+/** taken from https://github.com/kaitlyn-png/cmpm-121-f25-d1/blob/main/src/main.ts **/
+#description-panel {
+  margin-top: 24px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  width: 100%;
+  margin-bottom: 0px;
+}
+
+#description-text {
+  text-align: center;
+  font-size: 24px;
+  color: #96053d;
 }
 .resource-button {
   width: 90%;
